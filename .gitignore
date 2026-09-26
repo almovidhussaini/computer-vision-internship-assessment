@@ -1,7 +1,28 @@
-__pycache__/
-*.pyc
 
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# Jupyter
 .ipynb_checkpoints/
 
-# Calibration output
-project-root/calibration/camera_params.npz
+# Model files
+models/*.pth
+models/*.pt
+models/*.ckpt
+
+# Generated inference outputs
+inference/output.jpg
+
+# Dataset generated files
+dataset/undistorted/
+
+# OS files
+.DS_Store
+Thumbs.db
