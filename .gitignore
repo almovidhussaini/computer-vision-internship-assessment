@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+
+.ipynb_checkpoints/
+
+# Calibration output
+project-root/calibration/camera_params.npz
