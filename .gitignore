@@ -26,3 +26,8 @@ dataset/undistorted/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Generated measurement/inference outputs
+inference/measurement_image*.jpg
+inference/output_image*.jpg
+inference/temp_undistorted.jpg

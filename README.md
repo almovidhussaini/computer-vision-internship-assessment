@@ -1,102 +1,93 @@
+Computer Vision Internship Assessment
+Project Overview
 
-# Computer Vision Internship Assessment
+This project implements an end-to-end computer vision pipeline for:
 
-## Project Overview
+Camera calibration
+Image undistortion
+Notebook instance segmentation
+Red reference object detection
+Real-world measurement
+Annotated output generation
 
-This project is implemented an end-to-end computer vision pipeline for segmantion, camera callibration, undistortion, and real-word
-measurment
-The project gets an input notebook image and perform 
-1. Camera callibration
-2. Image undistortion
-3.Notebook instance segmentation
-4. mask extraction
-5 real-world dimension estimation
-6 annotated output generation
+The project uses Mask R-CNN with ResNet-50-FPN for notebook segmentation.
 
-##model (Mask R-cnn with ResNet-50-FPN)
-this model is selected because the task requires pixel-level segmentation rather than only bounding-boc detection. The model
-provides multi-scale feature extraction and good for instance segmentaion
+Installation
 
-the model was initialized with COCO-pretrained weights and fine-tuned for two classes:
--background
--Notebook
-##Dataset
-dataset contains:
--100 notebook images
---100 polygon annotations
-COCO annotation format
-One class: notebook
+Clone the repository:
 
-train| 70 |70%
-validation| 20| 20%
-Test| 10|10%
+git clone https://github.com/almovidhussaini/computer-vision-internship-assessment.git
+cd computer-vision-internship-assessment
 
-##Camera Calibration
-A printed checkerboard was used for camera calibration
--10 x 8 squares
-square size 20 mm x 20 mm
-20 images
-the callibration process estimates
+Install dependencies:
 
-Camera intrinsic matrix
-lens distortion coefficient
-the parameters are store in calibration/camera_params.npz
+pip install -r requirements.txt
 
-##Training Configuration
-Architecture   --> Mask R-CNN ResNEt-50-FPN
-Pretrained weights --> COCO
-Epoches --> 10
-Batch size -- > 2
-LEarning Rate --> 0.005
-Optimizer --> SGD
-Momentum --> 0.9
-Weight decay -- > StepLR
-Scheduler step --> 3 epoches
-Augmentation --> Random horizontal flip
-classes -- > 2
-Device cuda gpu
+For Google Colab:
 
-##Training result
-epoch1   --> trainloss(0.9411) -->validation loss(0.3752)
-epoch10 --> trainloss(0.478) -->validation loss(0.2640)
+from google.colab import drive
+drive.mount("/content/drive")
 
-#Test Evaluation
-Evaluation was performed on the held-out 10-image test set
-mAP@0.5	 -->  1.0000
-mAP@0.5:0.95 -->	0.8566
-Mean Mask IoU -->	0.9266
-Precision  -->	0.7143
-Recall -->	1.0000
-F1 Score  -->	0.8333
+%cd /content/drive/MyDrive/project-root
 
-#Inference
-standalone inference module is located at inference/inference.py
-perform 
-Input image--> camera unditortion --> Mask R-CNN --> Nitebook Detection --> Segmentation Mask --> bounding Box --> Annotated Ouput
+A CUDA GPU is recommended for training and inference.
 
-# END-TO-END pipeline
-is available in inference/run_pipeline.py  combine inference and measurement
-#Real-World Measurement
-is located in measurement/measure.py. The notebook dimension used as physical reference are width: 18 cm, Height: 30 cm
+The trained model is not included in GitHub because of its large file size.
 
-The segmentation mask is converted into a contour and a rotated minimum-area rectangle. Pixel dimensions are then converted to centimetres using the known physical notebook dimensions.
-#measurment limitaion:
-uses known notebook dimension therefore the 18 x 30 dimensions demonstrate the measurement piplene but should not be interpreted as an independent of an unknown objects's pyshical dimensions
-For independent measurement, a known reference object or calibrated planar homography setup would be required.
+Place the model at:
 
-# requirements
-Install dependences with pip install -r requirements.txt
+models/maskrcnn_notebook.pth
+How to Run
 
-Limitaions
-The data set contain only 100 images
-the held-out test set contains only 10 images
-only one object class is currently supported
-measurement pipeline uses known notebook dimensions as the pyysical scale
-the trained model checkpoint is larger than github normal 100 mb file limit
+The main workflow is:
 
-ConclusionA
+Input Image
+    ↓
+Camera Undistortion
+    ↓
+Mask R-CNN
+    ↓
+Notebook Segmentation
+    ↓
+Red Reference Detection
+    ↓
+Pixel-to-mm Conversion
+    ↓
+Dimension Measurement
+    ↓
+Annotated Output
 
-The project provides a complete computer vision workflow covering camera calibration, image preprocessing, instance segmentation, evaluation, inference, and real-world measurement.
+Standalone inference:
 
-The implementation uses Mask R-CNN rather than YOLO or Roboflow models and includes a
- held-out test evaluation, standalone inference module, and end-to-end measurement pipeline
+inference/inference.py
+
+End-to-end inference and measurement:
+
+inference/run_pipeline.py
+Project Structure
+project-root/
+├── calibration/
+├── dataset/
+├── models/
+├── inference/
+├── measurement/
+├── docs/
+├── requirements.txt
+├── README.md
+└── Internship_task.ipynb
+Documentation
+
+Detailed information is available in the docs/ folder:
+
+model_card.md — model, dataset, training and evaluation
+inference_guide.md — inference and running the pipeline
+measurement_methodology.md — calibration and measurement method
+measurement_accuracy_report.md — measurement results and error analysis
+Limitations
+Dataset contains 100 images.
+Only one foreground class, notebook, is supported.
+Measurement accuracy is affected by perspective and reference-object placement.
+The trained model checkpoint is excluded from GitHub because of its large file size.
+Conclusion
+
+This project provides a complete computer vision workflow from camera calibration and notebook segmentation to real-world measurement.
